@@ -1,21 +1,9 @@
-#include <string>
-#include <fstream>
-#include <iostream>
-#include <vector>
-#include "header/Datamanagement.h"
+
+#include "Header/Datamanagement.h"
 
 
 
-std::string json_map::getdatas(std::string key) {
-    return std::any_cast<string>(data[key]);
 
-
-}
-std::map<std::string, std::any>  json_map::getdata(std::string key) {
-    return std::any_cast<std::map<std::string, std::any>>(data[key]);
-
-
-}
 
 
 
@@ -42,10 +30,10 @@ bool datamanagement::loadfile() {
 
 };
 
-int datamanagement::mapnumber() {
+int datamanagement::vectorSize() {
     loadfile();
     int numofmaps = 0;
-    string line;
+    std::string line;
     while (getline(jsonFile, line, '\n')) {
         for (auto it = line.begin(); it != line.cend(); it++) {
             if (*it == '{')
@@ -60,30 +48,20 @@ int datamanagement::mapnumber() {
     return numofmaps;
 }
 
-struct json_map datamanagement::parsefile(std::string filename) {
-   int i = mapnumber(); //num of json_maps in the vector
-   std::cout << endl << stringFile;
-    static enum Cases {
-        INTERMIDIATE,
-        OPENING_BRACE,
-        CLOSING_BRACE,
-        QUOTES,
-        FIRST_BRACE,
-        INT,
-        COMMA
-
-        //others...
-    };
+void datamanagement::parsefile(std::string filename) {
+   int i = vectorSize(); //num of json_maps in the vector
+   std::cout << std::endl << stringFile;
+     
     //std::string line = "{\"username\":\"walidzein\",\"password\":{\"damn\":{\"another\":\"wowwww\"}}}";
     const std::string KEYREF = "REFEREANCEDONTUSEKEYINFILE";
     struct json_map temp = { std::map<std::string, std::any>() }; //creates a new json_map temp
     int case_num = FIRST_BRACE; //first case for the first brace
     auto it = stringFile.cbegin();
-    std::vector<struct json_map> nestedMaps(i);//vector that stores the keys for nested maps
+    nestedMaps.resize(i);//vector that stores the keys for nested maps
     int mapElement = 0;
     int mapPosition = 0;
-    string key; // stores the current key
-    string value; // stores the current value associated with the key
+    std::string key; // stores the current key
+    std::string value =""; // stores the current value associated with the key
     double valueD;
     int lastElement ;
     struct json_map* mapPt;
@@ -101,7 +79,7 @@ struct json_map datamanagement::parsefile(std::string filename) {
             {
 
                 jsonmap = { std::map<std::string, std::any>() };
-                nestedMaps.push_back(jsonmap);
+                nestedMaps[0] = { jsonmap };
             }
             case_num = INTERMIDIATE;
 
@@ -145,7 +123,7 @@ struct json_map datamanagement::parsefile(std::string filename) {
            
 
             temp.data[KEYREF] = &nestedMaps[mapElement]; //adds a pointer to the parent json_map
-            nestedMaps[mapElement] = { temp };//adds the temp to the vector of maps
+            nestedMaps[mapElement+1] = { temp };//adds the temp to the vector of maps
             lastElement = nestedMaps.size() - 1;
             nestedMaps[mapElement].data[key] = &nestedMaps[mapElement+1]; //adds refrance to the child map with the associated key which will always be the last json_map in the vector 
             
@@ -242,6 +220,7 @@ struct json_map datamanagement::parsefile(std::string filename) {
             valueIden = false;
             valueDIden = false;
             case_num = INTERMIDIATE;
+            
 
 
             break;
@@ -253,13 +232,16 @@ struct json_map datamanagement::parsefile(std::string filename) {
 
     /*struct json_map *mape=  any_cast<struct json_map*>(nestedMaps[0].data["password"]);
     struct json_map *mapee = any_cast<struct json_map*>((*mape).data["damn"]);*/
-
-    cout << endl << nestedMaps[0].getdatas("id");
-    cout << endl << nestedMaps[0].getdatas("name");
+    std::cout << nestedMaps[1].getdata<std::string>("gmail");
     
     
-    return jsonmap;
+    
+    
+    
 }
+
+
+
 
 //json_map datamanagement::parsefile(string filename = "") {
 //

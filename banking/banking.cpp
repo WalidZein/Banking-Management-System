@@ -13,20 +13,18 @@
 
 using namespace std;
 
-
-
-template<typename T>
-struct Node
-{
-    map<string, T> data;
-    struct Node* left, * right, * bottom;
-    Node(map<string, T> data)
-    {
-        this->data = data;
-        left = right = bottom = NULL;
-    }
-
-};
+//template<typename T>
+//struct Node
+//{
+//    map<string, T> data;
+//    struct Node* left, * right, * bottom;
+//    Node(map<string, T> data)
+//    {
+//        this->data = data;
+//        left = right = bottom = NULL;
+//    }
+//
+//};
 
 
 struct custom_map {
@@ -34,11 +32,6 @@ struct custom_map {
     map<string, any> data;
     string getDatas(string key) {
         return any_cast<const char*>(data[key]);
-
-
-    }
-    map<string, any> getData(string key) {
-        return any_cast<map<string, any>>(data[key]);
 
 
     }
@@ -51,7 +44,7 @@ struct custom_map {
 
 int main()
 {
-    cout << endl;
+    /*cout << endl;
     any a = 5;
     map <string, string> test;
     test["walid"] = "walid";
@@ -61,7 +54,7 @@ int main()
     struct Node<string>* root = &root1;
     auto root2 = Node<string>(test);
     root->data = test1;
-    cout << root->data["walid"];
+    cout << root->data["walid"];*/
 
     map <string, any> test2;
     test2["walid"] = "no new frineds";
@@ -115,11 +108,24 @@ int main()
    
     datamanagement tester("testFile.json");
     
-    tester.parsefile();
-    
+   tester.parsefile();
+   cout << tester.getValue("id");
+   
    
 
-  
+   // print("1ff", "2ff", "3ff");
+    
+   
+    
+    //struct custom_map map1 = {};
+    //struct custom_map map2 = {};
+    //any name = "walid";
+    //any map3 = map1;
+    //any map4 = map2;
+    //cout<< endl <<name.type().name();
+    //cout << endl << map4.type().name();
+
+
    
    
     

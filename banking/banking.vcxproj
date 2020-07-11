@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -151,9 +152,11 @@
   <ItemGroup>
     <ClCompile Include="banking.cpp" />
     <ClCompile Include="datamanagement.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="tree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="json_map.h" />
     <ClInclude Include="Header\Datamanagement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

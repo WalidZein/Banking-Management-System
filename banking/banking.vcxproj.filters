@@ -24,9 +24,15 @@
     <ClCompile Include="tree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\Datamanagement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

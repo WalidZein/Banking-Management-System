@@ -1,6 +1,9 @@
 {
 
   "id": "walid",
-  "name":  "username"
+  "name": 
+    {
+      "gmail": "yes"
+    }
 
 }

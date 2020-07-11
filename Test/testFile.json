@@ -1,1 +1,22 @@
-{"id":  "name"}
+{
+
+  "id": "123",
+  "username": "wilyx11",
+  "account info": 
+  {
+    "birth": "20/11/1999",
+    "phonenumber": "5404044",
+    "account":
+    {
+      "balance": 400,
+      "transactions":
+      {
+
+      }
+    }
+
+  }
+
+
+
+}

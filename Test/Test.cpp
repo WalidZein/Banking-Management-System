@@ -29,5 +29,15 @@ namespace BankingTest
 			Assert::IsFalse(testFileReturn);
 
 		}
+
+		TEST_METHOD(VectorSize)
+		{
+
+			datamanagement testob("C:/Users/wilyx11/Desktop/projects/C++/Banking_management_system/banking/Test/testFile.json");
+			
+
+			
+
+		}
 	};
 }
