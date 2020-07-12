@@ -8,6 +8,7 @@
 #include <string>
 #include <any>
 #include <vector>
+#include<deque>
 
 
 
@@ -60,13 +61,13 @@ int main()
     test2["walid"] = "no new frineds";
     map<string, any> testn;
 
-    testn["walid"] = test2;
+    testn["walid"] = "some new frineds";
 
 
 
     //vector<struct custom_map> testvector;
-    //struct custom_map map1 = { testn };
-    //struct custom_map map2 = { test2 };
+    struct custom_map map1 = { testn };
+    struct custom_map map2 = { test2 };
     //struct custom_map map3 = { map<string,any>() };
     //testvector.push_back(map1);
     //testvector.push_back(map2);
@@ -109,7 +110,10 @@ int main()
     datamanagement tester("testFile.json");
     
    tester.parsefile();
-   cout << tester.getValue("id");
+   tester.writeData();
+   
+
+   
    
    
 

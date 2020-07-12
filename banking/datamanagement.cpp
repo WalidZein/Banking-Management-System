@@ -53,7 +53,7 @@ void datamanagement::parsefile(std::string filename) {
    std::cout << std::endl << stringFile;
      
     //std::string line = "{\"username\":\"walidzein\",\"password\":{\"damn\":{\"another\":\"wowwww\"}}}";
-    const std::string KEYREF = "REFEREANCEDONTUSEKEYINFILE";
+    const std::string KEYREF = "00REFEREANCEDONTUSEKEYINFILE";
     struct json_map temp = { std::map<std::string, std::any>() }; //creates a new json_map temp
     int case_num = FIRST_BRACE; //first case for the first brace
     auto it = stringFile.cbegin();
@@ -212,6 +212,7 @@ void datamanagement::parsefile(std::string filename) {
             else if (valueDIden) {
                 nestedMaps[mapElement].data[key] = valueD;
             }
+            
 
             //resets value variables 
             key = "";
@@ -240,6 +241,69 @@ void datamanagement::parsefile(std::string filename) {
     
 }
 
+std::string datamanagement::writeData(struct json_map dataInput)
+{
+    int nest = 0;
+    std::string jsonString = "";
+    if (dataInput.data.empty())
+    {
+        dataInput = nestedMaps[0];
+    }
+    std::map<std::string, std::any>::iterator it;
+    auto rit = dataInput.data.rbegin();
+    
+    
+    for (it = dataInput.data.begin(); it != dataInput.data.end(); it++ )
+    {
+        bool comma = (it != dataInput.data.begin()) && (it != std::prev(rit.base())) && (nest > 0);
+        if (comma) 
+        {
+            jsonString.append(",").append("\n");
+            nest--;
+        }
+        std::string key = it->first;
+        std::any val = it->second;
+        if (key == "00REFEREANCEDONTUSEKEYINFILE")
+        {
+            continue;
+        }
+        jsonString.append("\"").append(key).append("\"").append(": ");
+        std::string type = val.type().name();
+        std::string stringType = typeid(std::string).name();
+        if (!stringType.compare(type))
+        {
+            std::string stringValue = dataInput.getdata<std::string>(key);
+            jsonString.append("\"").append(stringValue).append("\"");
+            
+            comma = (it != std::prev(rit.base()));
+                if (comma)
+                {
+                    jsonString.append(",").append("\n");
+                }
+                else 
+                {
+                    jsonString.append("\n");
+
+                }
+            
+        }
+        else
+        {
+            jsonString.append("\n").append("{");
+            nest++;
+            dataInput = *(dataInput.getdata<struct json_map*>(key));
+            auto itholder = it;
+            jsonString.append(writeData(dataInput));
+            
+        }
+
+    }
+
+    jsonString.append("}");
+    return jsonString;
+
+}
+
 
 
 
@@ -247,3 +311,5 @@ void datamanagement::parsefile(std::string filename) {
 //
 //
 //}
+
+

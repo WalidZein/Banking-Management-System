@@ -33,8 +33,10 @@ private:
     bool loadfile();
 	
 public:
-    void parsefile(std::string filename = "");
     datamanagement(std::string filename);
+    void parsefile(std::string filename = "");
+    std::string writeData(struct json_map dataInput = {std::map<std::string,std::any>()});
+
     template<class... Args>
     auto getValue(Args... args)
     {
@@ -58,6 +60,34 @@ public:
             
         }
         return value;
+    }
+
+    template<class... Args>
+    void setValue(Args... args)
+    {
+        struct json_map* pt = &nestedMaps[0];
+        std::string keyPath[] = { args... };
+        int arraySize = (sizeof(keyPath) / sizeof(keyPath[0])) - 1;
+        std::string value = keyPath[arraySize];
+        
+        for (int i = 0; i < arraySize; i++)
+        {
+            std::string key = keyPath[i];
+            std::string type = (*pt).data[key].type().name();
+            std::string stringType = typeid(std::string).name();
+            if (!stringType.compare(type))
+            {
+                (*pt).data[key] = value;
+            }
+
+            else
+            {
+                pt = (*pt).getdata<struct json_map*>(key);
+
+            }
+
+        }
+        
     }
 private:
 	
