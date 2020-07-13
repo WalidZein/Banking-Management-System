@@ -2,15 +2,12 @@
 
   "id": "123",
   "username": "wilyx11",
-  "account info": 
-  {
+  "account info": {
     "birth": "20/11/1999",
     "phonenumber": "5404044",
-    "account":
-    {
+    "account": {
       "balance": 400,
-      "transactions":
-      {
+      "transactions": {
 
       }
     }
@@ -20,3 +17,4 @@
 
 
 }
+

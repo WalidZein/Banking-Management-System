@@ -68,6 +68,8 @@ int main()
     //vector<struct custom_map> testvector;
     struct custom_map map1 = { testn };
     struct custom_map map2 = { test2 };
+    testn["name"] = map1;
+    auto test1 = testn;
     //struct custom_map map3 = { map<string,any>() };
     //testvector.push_back(map1);
     //testvector.push_back(map2);
@@ -81,7 +83,7 @@ int main()
     //cout << "0: " << &testvector[0] << endl;
     //cout << "1: " << &testvector[1] << endl;
     //cout << "2: " << &testvector[2] << endl;
-    
+    bool testbool = testn == test1;
     
     ifstream fileIn("testFile.json");
     string s;

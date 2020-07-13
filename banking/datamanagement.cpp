@@ -12,6 +12,11 @@ datamanagement::datamanagement(std::string filename) {
 
 }
 
+std::string datamanagement::getStringFile()
+{
+    return stringFile;
+}
+
 bool datamanagement::loadfile() {
 
     jsonFile.open(this->filename);
@@ -41,9 +46,13 @@ int datamanagement::vectorSize() {
                 numofmaps++;
 
             }
+            if (!isspace(*it))
+            {
+                stringFile.push_back(*it);
+            }
             
         }
-        stringFile.append(line);
+        
     }
     return numofmaps;
 }
@@ -68,6 +77,7 @@ void datamanagement::parsefile(std::string filename) {
     bool valueIden = false; //identifies if a the value is a string
     bool valueDIden = false; //identifies if the value is a number
     bool mapIden = false; //identifies if the value is a map
+    bool inParent = false;
     while (it < stringFile.cend()) //iterates through the line
     {
 
@@ -122,10 +132,9 @@ void datamanagement::parsefile(std::string filename) {
 
            
 
-            temp.data[KEYREF] = &nestedMaps[mapElement]; //adds a pointer to the parent json_map
+            temp.data[KEYREF] = &nestedMaps[mapPosition]; //adds a pointer to the parent json_map
             nestedMaps[mapElement+1] = { temp };//adds the temp to the vector of maps
-            lastElement = nestedMaps.size() - 1;
-            nestedMaps[mapElement].data[key] = &nestedMaps[mapElement+1]; //adds refrance to the child map with the associated key which will always be the last json_map in the vector 
+            nestedMaps[mapPosition].data[key] = &nestedMaps[mapElement+1]; //adds refrance to the child map with the associated key which will always be the last json_map in the vector 
             
             mapElement++;
             mapPosition++;
@@ -136,6 +145,7 @@ void datamanagement::parsefile(std::string filename) {
             valueD = 0;
             valueIden = false;
             valueDIden = false;
+            inParent = false;
             case_num = INTERMIDIATE;
             break;
             // for closing brace either it maps the end of the file or end of a nested map.
@@ -145,17 +155,39 @@ void datamanagement::parsefile(std::string filename) {
                 it++;
             }
 
-            if (valueIden)
+            if (valueIden && !inParent)
             {
                 nestedMaps[mapElement].data[key] = value;
             }
-            else if (valueDIden)
+            else if (valueDIden && !inParent)
             {
                 nestedMaps[mapElement].data[key] = valueD;
             }
+            else if (valueIden && inParent)
+            {
+                nestedMaps[mapPosition].data[key] = value;
+            }
+            else if (valueDIden && inParent)
+            {
+                nestedMaps[mapPosition].data[key] = valueD;
+            }
+
             if (mapIden)
             {
                 mapPosition--;
+                auto ittemp = it+1;
+                while (isspace(*ittemp)) 
+                {
+                    ittemp++;
+                }
+                if (*ittemp == ',') 
+                {
+                    inParent = true;
+                }
+                else
+                {
+                    inParent = false;
+                }
                 mapIden = false;
             }
 
@@ -205,13 +237,23 @@ void datamanagement::parsefile(std::string filename) {
 
             //if a comma is found the value is added to the corresponding key 
         case COMMA:
-            if (valueIden)
+            if (valueIden && !inParent)
             {
                 nestedMaps[mapElement].data[key] = value;
             }
-            else if (valueDIden) {
+            else if (valueDIden && !inParent)
+            {
                 nestedMaps[mapElement].data[key] = valueD;
             }
+            else if (valueIden && inParent)
+            {
+                nestedMaps[mapPosition].data[key] = value;
+            }
+            else if (valueDIden && inParent)
+            {
+                nestedMaps[mapElement].data[key] = value;
+            }
+            
             
 
             //resets value variables 
@@ -225,6 +267,7 @@ void datamanagement::parsefile(std::string filename) {
 
 
             break;
+        
         default:
             break;
 
@@ -233,7 +276,7 @@ void datamanagement::parsefile(std::string filename) {
 
     /*struct json_map *mape=  any_cast<struct json_map*>(nestedMaps[0].data["password"]);
     struct json_map *mapee = any_cast<struct json_map*>((*mape).data["damn"]);*/
-    std::cout << nestedMaps[1].getdata<std::string>("gmail");
+    
     
     
     
@@ -244,7 +287,7 @@ void datamanagement::parsefile(std::string filename) {
 std::string datamanagement::writeData(struct json_map dataInput)
 {
     int nest = 0;
-    std::string jsonString = "";
+    std::string jsonString = "{";
     if (dataInput.data.empty())
     {
         dataInput = nestedMaps[0];
@@ -255,10 +298,10 @@ std::string datamanagement::writeData(struct json_map dataInput)
     
     for (it = dataInput.data.begin(); it != dataInput.data.end(); it++ )
     {
-        bool comma = (it != dataInput.data.begin()) && (it != std::prev(rit.base())) && (nest > 0);
+        bool comma = (it != dataInput.data.begin())  && (nest > 0);
         if (comma) 
         {
-            jsonString.append(",").append("\n");
+            jsonString.append(",");
             nest--;
         }
         std::string key = it->first;
@@ -267,7 +310,7 @@ std::string datamanagement::writeData(struct json_map dataInput)
         {
             continue;
         }
-        jsonString.append("\"").append(key).append("\"").append(": ");
+        jsonString.append("\"").append(key).append("\"").append(":");
         std::string type = val.type().name();
         std::string stringType = typeid(std::string).name();
         if (!stringType.compare(type))
@@ -278,22 +321,18 @@ std::string datamanagement::writeData(struct json_map dataInput)
             comma = (it != std::prev(rit.base()));
                 if (comma)
                 {
-                    jsonString.append(",").append("\n");
+                    jsonString.append(",");
                 }
-                else 
-                {
-                    jsonString.append("\n");
-
-                }
+                
             
         }
         else
         {
-            jsonString.append("\n").append("{");
+            
             nest++;
-            dataInput = *(dataInput.getdata<struct json_map*>(key));
-            auto itholder = it;
-            jsonString.append(writeData(dataInput));
+           struct json_map temp = *(dataInput.getdata<struct json_map*>(key));
+            const auto itholder = it;
+            jsonString.append(writeData(temp));
             
         }
 

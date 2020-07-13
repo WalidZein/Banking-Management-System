@@ -1,9 +1,9 @@
 {
 
   "id": "walid",
-  "name": 
-    {
-      "gmail": "yes"
-    }
-
+  "name": {
+    "gmail": "yes"
+  },
+  
+  "zebra": "oh well"
 }

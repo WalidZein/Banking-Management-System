@@ -36,6 +36,7 @@ public:
     datamanagement(std::string filename);
     void parsefile(std::string filename = "");
     std::string writeData(struct json_map dataInput = {std::map<std::string,std::any>()});
+    std::string getStringFile();
 
     template<class... Args>
     auto getValue(Args... args)
