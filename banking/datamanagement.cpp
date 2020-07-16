@@ -6,17 +6,18 @@
 
 
 
-
+//constructor 
 datamanagement::datamanagement(std::string filename) {
     this->filename = filename;
 
 }
-
+//returns file contents as a string.
 std::string datamanagement::getStringFile()
 {
     return stringFile;
 }
 
+//loads the file up in ifstream
 bool datamanagement::loadfile() {
 
     jsonFile.open(this->filename);
@@ -34,7 +35,7 @@ bool datamanagement::loadfile() {
 
 
 };
-
+//returns the number of json_maps needed for current file
 int datamanagement::vectorSize() {
     loadfile();
     int numofmaps = 0;
@@ -57,27 +58,25 @@ int datamanagement::vectorSize() {
     return numofmaps;
 }
 
+//parses json file and put the fiel content into maps representing the json file
 void datamanagement::parsefile(std::string filename) {
-   int i = vectorSize(); //num of json_maps in the vector
-   std::cout << std::endl << stringFile;
-     
-    //std::string line = "{\"username\":\"walidzein\",\"password\":{\"damn\":{\"another\":\"wowwww\"}}}";
+
+    
     const std::string KEYREF = "00REFEREANCEDONTUSEKEYINFILE";
-    struct json_map temp = { std::map<std::string, std::any>() }; //creates a new json_map temp
+    struct json_map  temp = { std::map<std::string, std::any>() };
     int case_num = FIRST_BRACE; //first case for the first brace
-    auto it = stringFile.cbegin();
+    int i = vectorSize(); //num of json_maps in the vector
     nestedMaps.resize(i);//vector that stores the keys for nested maps
     int mapElement = 0;
     int mapPosition = 0;
-    std::string key; // stores the current key
+    std::string key =""; // stores the current key
     std::string value =""; // stores the current value associated with the key
     double valueD;
-    int lastElement ;
-    struct json_map* mapPt;
     bool valueIden = false; //identifies if a the value is a string
     bool valueDIden = false; //identifies if the value is a number
     bool mapIden = false; //identifies if the value is a map
     bool inParent = false;
+    auto it = stringFile.cbegin();
     while (it < stringFile.cend()) //iterates through the line
     {
 
@@ -88,8 +87,8 @@ void datamanagement::parsefile(std::string filename) {
             if (*it == '{')
             {
 
-                jsonmap = { std::map<std::string, std::any>() };
-                nestedMaps[0] = { jsonmap };
+               
+                nestedMaps[0] = { temp};
             }
             case_num = INTERMIDIATE;
 
@@ -286,19 +285,19 @@ void datamanagement::parsefile(std::string filename) {
 
 std::string datamanagement::writeData(struct json_map dataInput)
 {
-    int nest = 0;
+    int nest = 0; // monitors the nesting level
     std::string jsonString = "{";
     if (dataInput.data.empty())
     {
         dataInput = nestedMaps[0];
     }
     std::map<std::string, std::any>::iterator it;
-    auto rit = dataInput.data.rbegin();
+    auto rit = dataInput.data.rbegin(); // reverse iterator to check the last element
     
     
     for (it = dataInput.data.begin(); it != dataInput.data.end(); it++ )
     {
-        bool comma = (it != dataInput.data.begin())  && (nest > 0);
+        bool comma = (it != dataInput.data.begin())  && (nest > 0); // if a map is followed by elemnts sharing the saem parent a comma is placed between them
         if (comma) 
         {
             jsonString.append(",");
@@ -306,19 +305,19 @@ std::string datamanagement::writeData(struct json_map dataInput)
         }
         std::string key = it->first;
         std::any val = it->second;
-        if (key == "00REFEREANCEDONTUSEKEYINFILE")
+        if (key == "00REFEREANCEDONTUSEKEYINFILE") //settings key nit for user use
         {
             continue;
         }
         jsonString.append("\"").append(key).append("\"").append(":");
         std::string type = val.type().name();
         std::string stringType = typeid(std::string).name();
-        if (!stringType.compare(type))
+        if (!stringType.compare(type)) // if value is a string
         {
             std::string stringValue = dataInput.getdata<std::string>(key);
             jsonString.append("\"").append(stringValue).append("\"");
             
-            comma = (it != std::prev(rit.base()));
+            comma = (it != std::prev(rit.base())); //if not the last element in the map add comma
                 if (comma)
                 {
                     jsonString.append(",");
@@ -326,7 +325,7 @@ std::string datamanagement::writeData(struct json_map dataInput)
                 
             
         }
-        else
+        else // if value is a map
         {
             
             nest++;
