@@ -17,6 +17,11 @@ std::string datamanagement::getStringFile()
     return stringFile;
 }
 
+struct json_map datamanagement::getJson_map()
+{
+    return jsonmap;
+}
+
 //loads the file up in ifstream
 bool datamanagement::loadfile() {
 
@@ -77,6 +82,7 @@ void datamanagement::parsefile(std::string filename) {
     bool mapIden = false; //identifies if the value is a map
     bool inParent = false;
     auto it = stringFile.cbegin();
+    int pervCase_num = case_num;
     while (it < stringFile.cend()) //iterates through the line
     {
 
@@ -145,7 +151,9 @@ void datamanagement::parsefile(std::string filename) {
             valueIden = false;
             valueDIden = false;
             inParent = false;
+            pervCase_num = case_num;
             case_num = INTERMIDIATE;
+            
             break;
             // for closing brace either it maps the end of the file or end of a nested map.
         case CLOSING_BRACE:
@@ -154,32 +162,37 @@ void datamanagement::parsefile(std::string filename) {
                 it++;
             }
 
-            if (valueIden && !inParent)
+            if (pervCase_num != OPENING_BRACE)
             {
-                nestedMaps[mapElement].data[key] = value;
-            }
-            else if (valueDIden && !inParent)
-            {
-                nestedMaps[mapElement].data[key] = valueD;
-            }
-            else if (valueIden && inParent)
-            {
-                nestedMaps[mapPosition].data[key] = value;
-            }
-            else if (valueDIden && inParent)
-            {
-                nestedMaps[mapPosition].data[key] = valueD;
+                if (valueIden && !inParent)
+                {
+                    nestedMaps[mapElement].data[key] = value;
+                }
+                else if (valueDIden && !inParent)
+                {
+                    nestedMaps[mapElement].data[key] = valueD;
+                }
+                else if (valueIden && inParent)
+                {
+                    nestedMaps[mapPosition].data[key] = value;
+                }
+                else if (valueDIden && inParent)
+                {
+                    nestedMaps[mapPosition].data[key] = valueD;
+                }
             }
 
-            if (mapIden)
+            
+
+            if (mapIden) // If map
             {
                 mapPosition--;
                 auto ittemp = it+1;
-                while (isspace(*ittemp)) 
+                while (isspace(*ittemp)) // looks at the next character that is not  a space  
                 {
                     ittemp++;
                 }
-                if (*ittemp == ',') 
+                if (*ittemp == ',') // if comma then there are more elements in the parent map after this map
                 {
                     inParent = true;
                 }
@@ -200,7 +213,7 @@ void datamanagement::parsefile(std::string filename) {
             valueD = 0;
             valueIden = false;
             valueDIden = false;
-
+            pervCase_num = case_num;
             case_num = INTERMIDIATE;
 
             break;
@@ -220,7 +233,7 @@ void datamanagement::parsefile(std::string filename) {
                 }
 
             }
-
+            pervCase_num = case_num;
             case_num = INTERMIDIATE;
             break;
 
@@ -261,6 +274,7 @@ void datamanagement::parsefile(std::string filename) {
             valueD = 0;
             valueIden = false;
             valueDIden = false;
+            pervCase_num = case_num;
             case_num = INTERMIDIATE;
             
 
@@ -272,6 +286,8 @@ void datamanagement::parsefile(std::string filename) {
 
         }
     }
+
+    jsonmap = nestedMaps[0];
 
     /*struct json_map *mape=  any_cast<struct json_map*>(nestedMaps[0].data["password"]);
     struct json_map *mapee = any_cast<struct json_map*>((*mape).data["damn"]);*/

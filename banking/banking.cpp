@@ -58,18 +58,27 @@ int main()
     cout << root->data["walid"];*/
 
     map <string, any> test2;
-    test2["walid"] = "no new frineds";
+    string na = "no new frineds";
+    test2["walid"] = na;
+    string ha = "no new frined";
     map<string, any> testn;
 
-    testn["walid"] = "some new frineds";
+    testn["wali"] = ha;
+    struct json_map test = { map<string,any>() };
+    test2["test"] = &test;
+    cout << test2["test"].type().name() << endl;
 
 
 
     //vector<struct custom_map> testvector;
-    struct custom_map map1 = { testn };
-    struct custom_map map2 = { test2 };
-    testn["name"] = map1;
-    auto test1 = testn;
+    struct json_map map1 = { testn };
+    struct json_map map2 = { test2 };
+    map1.data["what"] = &map2;
+    auto map3 = map1;
+    auto map4 = map2;
+    map4.data["walid"] = ha;
+    map3.data["what"] = &map4;
+    //map1.compareJson_map(map3);
     //struct custom_map map3 = { map<string,any>() };
     //testvector.push_back(map1);
     //testvector.push_back(map2);
@@ -83,18 +92,12 @@ int main()
     //cout << "0: " << &testvector[0] << endl;
     //cout << "1: " << &testvector[1] << endl;
     //cout << "2: " << &testvector[2] << endl;
-    bool testbool = testn == test1;
+    //bool testbool = testn == test1;
     
-    ifstream fileIn("testFile.json");
-    string s;
-    string text;
-
-    while (getline(fileIn, s, '\n'))
-    {
-        text.append(s);
-    }
-    cout << text << endl;
     
+    
+   bool compare = map1.compareJson_map(map3);
+   cout << compare;
     
 
 

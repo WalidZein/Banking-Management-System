@@ -32,7 +32,7 @@
     <ClInclude Include="Header\Datamanagement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_map.h">
+    <ClInclude Include="Header\json_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

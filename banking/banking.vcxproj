@@ -156,8 +156,8 @@
     <ClCompile Include="tree.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="json_map.h" />
     <ClInclude Include="Header\Datamanagement.h" />
+    <ClInclude Include="Header\json_map.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
