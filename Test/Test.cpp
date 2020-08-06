@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "../banking/datamanagement.cpp"
+#include "../banking/User.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -77,6 +78,16 @@ namespace BankingTest
 
 		}
 
+		TEST_METHOD(FindPath) 
+		{
+			datamanagement testob("C:/Users/wilyx11/Desktop/projects/C++/Banking_management_system/banking/Test/testFile.json");
+			testob.parsefile();
+			auto vec = testob.findValue("balance");
+			auto value = std::any_cast<std::string>(vec[0]);
+			Assert::IsTrue(!value.compare("400"));
+
+		}
+
 		TEST_METHOD(writeMapString)
 		{
 
@@ -94,4 +105,18 @@ namespace BankingTest
 
 		}
 	};
+
+	TEST_CLASS(User)
+	{
+	public:
+		TEST_METHOD(UserConstruction) {
+
+			datamanagement testob("C:/Users/wilyx11/Desktop/projects/C++/Banking_management_system/banking//banking/Data/accounts.json");
+			testob.parsefile();
+			User test(&testob, "0");
+
+		}
+
+	};
+
 }

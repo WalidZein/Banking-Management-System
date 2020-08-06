@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include "Header/Datamanagement.h"
+#include "Header/User.h"
 #include <string>
 #include <any>
 #include <vector>
@@ -112,10 +113,11 @@ int main()
     //map2.data["walid"] = 2;
     ////cout << any_cast<int>(any_cast<struct custom_map>(map3.data["name"]).data["walid"]);
    
-    datamanagement tester("testFile.json");
+    datamanagement tester("C:/Users/wilyx11/Desktop/projects/C++/Banking_management_system/banking//banking/Data/accounts.json");
     
    tester.parsefile();
-   tester.writeData();
+   //User testuser(&tester, "0");
+
    
 
    

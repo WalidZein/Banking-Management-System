@@ -1,0 +1,58 @@
+{
+  "0": {
+    "username": "test",
+    "password": "test",
+    "userinfo": {
+      "firstname": "Walid",
+      "lastname": "Zein",
+      "email": "test@gmail.com",
+      "address": "123 test street, 2405, test",
+      "phonenumber": "552343561",
+      "dataofbirth": "12/3/2012"
+
+    },
+    "accountinfo": {
+      "balance": "5000.23",
+      "transactions": {
+        "8/4/2020": {
+          "amount": "50",
+          "type": "deposit",
+          "by": "Tester"
+        },
+        "8/5/2020": {
+          "amount": "50",
+          "type": "deposit",
+          "by": "Tester"
+        }
+      }
+    }
+  },
+  "1": {
+    "username": "test1",
+    "password": "test",
+    "userinfo": {
+      "firstname": "Walid",
+      "lastname": "Zein",
+      "email": "test@gmail.com",
+      "address": "123 test street, 2405, test",
+      "phonenumber": "552343561",
+      "dataofbirth": "12/3/2012"
+
+    },
+    "accountinfo": {
+      "balance": "5000.23",
+      "transactions": {
+        "8/4/2020": {
+          "amount": "50",
+          "type": "deposit",
+          "by": "Tester"
+        },
+        "8/5/2020": {
+          "amount": "50",
+          "type": "deposit",
+          "by": "Tester"
+        }
+      }
+    }
+  }
+}

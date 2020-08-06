@@ -358,6 +358,63 @@ std::string datamanagement::writeData(struct json_map dataInput)
 
 }
 
+std::vector<std::any> datamanagement::findValue(std::string element, struct json_map* json_mapPointer, std::string passedKey)
+{
+    int pathSize = 0;
+    struct json_map map;
+    std::vector<std::any> path;
+    if (!json_mapPointer) 
+    {
+        map = nestedMaps[0];
+
+
+    }
+    else
+    {
+        map = *json_mapPointer;
+    }
+
+    if (map.data.find(element) != map.data.end()) {
+        path.push_back(map.data[element]);
+        path.push_back(element);
+        
+        return path;
+    }
+
+    for (auto it = map.data.begin(); it != map.data.end(); it++)
+    {
+        std::string key = it->first;
+        auto val = it->second;
+        std::string type = val.type().name();
+        std::string json_mapType = typeid(struct json_map*).name();
+        pathSize = path.size();
+        if (key == "00REFEREANCEDONTUSEKEYINFILE")
+        {
+            continue;
+        }
+
+        if (!json_mapType.compare(type))
+        {
+            json_mapPointer = map.getdata<struct json_map*>(key);
+            auto temp = findValue(element, json_mapPointer, key);
+            path.insert(path.end(), temp.begin(), temp.end());
+            if (pathSize != path.size())
+            {
+                path.push_back(key);
+                return path;
+            }
+
+        }
+    }
+
+    return path;
+
+    
+
+
+
+}
+
 
 
 

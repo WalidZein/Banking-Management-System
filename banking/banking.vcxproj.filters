@@ -21,10 +21,7 @@
     <ClCompile Include="datamanagement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="User.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -33,6 +30,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Header\json_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\User.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

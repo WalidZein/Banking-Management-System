@@ -152,12 +152,12 @@
   <ItemGroup>
     <ClCompile Include="banking.cpp" />
     <ClCompile Include="datamanagement.cpp" />
-    <ClCompile Include="Source.cpp" />
-    <ClCompile Include="tree.cpp" />
+    <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\Datamanagement.h" />
     <ClInclude Include="Header\json_map.h" />
+    <ClInclude Include="Header\User.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -38,11 +38,12 @@ public:
     std::string writeData(struct json_map dataInput = {std::map<std::string,std::any>()});
     std::string getStringFile();
     struct json_map getJson_map();
+    std::vector<std::any> findValue(std::string element, struct json_map* json_mapPointer = NULL, std::string key = "");
 
     template<class... Args>
     auto getValue(Args... args) // takes a list of string arguments corresponding to key path
     {
-        std::string value;
+        std::any value;
         struct json_map* pt = &nestedMaps[0]; // points to the highest level json_map in the vector
         for (auto arg : { args... }) 
         {
@@ -51,12 +52,13 @@ public:
             std::string stringType = typeid(std::string).name();
             if (!stringType.compare(type)) // if data is string
             {
-                value = (*pt).getdata<std::string>(arg);
+                value = (*pt).data[arg];
             }
 
             else // if json_map
             {
                 pt = (*pt).getdata<struct json_map*>(arg);
+                value = (*pt).data[arg];
                
             }
             
