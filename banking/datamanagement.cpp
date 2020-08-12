@@ -72,8 +72,14 @@ void datamanagement::parsefile(std::string filename) {
     int case_num = FIRST_BRACE; //first case for the first brace
     int i = vectorSize(); //num of json_maps in the vector
     nestedMaps.resize(i);//vector that stores the keys for nested maps
+    for (int j = 0; j < i; j++) 
+    {
+        std::cout << std::endl;
+        std::cout <<j<< ": "<< &nestedMaps[j] << std::endl;
+    }
     int mapElement = 0;
-    int mapPosition = 0;
+    
+    auto mapPositionAd = &nestedMaps[0]; //address of the current parent map
     std::string key =""; // stores the current key
     std::string value =""; // stores the current value associated with the key
     double valueD;
@@ -83,6 +89,9 @@ void datamanagement::parsefile(std::string filename) {
     bool inParent = false;
     auto it = stringFile.cbegin();
     int pervCase_num = case_num;
+    std::string mapParentStatus;
+    auto ittemp = it + 1; //for checking future character
+    auto parentSet = false; //if parent is already set by closing brace so it is not overriden by opening brace
     while (it < stringFile.cend()) //iterates through the line
     {
 
@@ -135,14 +144,22 @@ void datamanagement::parsefile(std::string filename) {
 
         case OPENING_BRACE:
 
-           
+            if (inParent || parentSet)  // checks if the current map has the same parent as the pervious one or if the parent is already set
+            {
+                parentSet = false;
+               // mapPositionAd = mapPositionAd->getdata<struct json_map*>(KEYREF); // set current parrent map to the current parent map's parent
+            }
+            else
+            {
+                mapPositionAd = &nestedMaps[mapElement]; // set the parent map to the the current map element
+            }
 
-            temp.data[KEYREF] = &nestedMaps[mapPosition]; //adds a pointer to the parent json_map
+            temp.data[KEYREF] = mapPositionAd;// temp.data[KEYREF] = &nestedMaps[mapPosition]; //adds a pointer to the parent json_map
             nestedMaps[mapElement+1] = { temp };//adds the temp to the vector of maps
-            nestedMaps[mapPosition].data[key] = &nestedMaps[mapElement+1]; //adds refrance to the child map with the associated key which will always be the last json_map in the vector 
+            mapPositionAd->data[key] = &nestedMaps[mapElement + 1];//nestedMaps[mapPosition].data[key] = &nestedMaps[mapElement+1]; //adds refrance to the child map with the associated key which will always be the last json_map in the vector 
             
             mapElement++;
-            mapPosition++;
+            
 
             mapIden = true;
             key = "";
@@ -163,7 +180,9 @@ void datamanagement::parsefile(std::string filename) {
             }
 
             if (pervCase_num != OPENING_BRACE)
+
             {
+                
                 if (valueIden && !inParent)
                 {
                     nestedMaps[mapElement].data[key] = value;
@@ -174,11 +193,11 @@ void datamanagement::parsefile(std::string filename) {
                 }
                 else if (valueIden && inParent)
                 {
-                    nestedMaps[mapPosition].data[key] = value;
+                    mapPositionAd->data[key] = value;//nestedMaps[mapPosition].data[key] = value;
                 }
                 else if (valueDIden && inParent)
                 {
-                    nestedMaps[mapPosition].data[key] = valueD;
+                    //nestedMaps[mapPosition].data[key] = valueD; //not working yet
                 }
             }
 
@@ -186,7 +205,7 @@ void datamanagement::parsefile(std::string filename) {
 
             if (mapIden) // If map
             {
-                mapPosition--;
+                
                 auto ittemp = it+1;
                 while (isspace(*ittemp)) // looks at the next character that is not  a space  
                 {
@@ -203,9 +222,35 @@ void datamanagement::parsefile(std::string filename) {
                 mapIden = false;
             }
 
+            mapParentStatus = mapPositionAd->data[KEYREF].type().name();
+            
 
+            
+            if (ittemp + 1 != stringFile.cend())
+            {
+                ittemp = it + 1;
 
-
+            }
+            
+            while (isspace(*ittemp)) // looks at the next character that is not  a space  
+            {
+                ittemp++;
+            }
+            if (*ittemp == '}') // if comma then there are more elements in the parent map after this map
+            {
+                if (mapParentStatus.compare("void")) // if not root parent
+                {
+                    
+                    mapPositionAd = mapPositionAd->getdata<struct json_map*>(KEYREF); // set parent to parent of current parent
+                    parentSet = true;
+                }
+            }
+            else
+            {
+                
+            }
+            
+            
 
             //resets value variables 
             key = "";
@@ -214,6 +259,7 @@ void datamanagement::parsefile(std::string filename) {
             valueIden = false;
             valueDIden = false;
             pervCase_num = case_num;
+           // mapPositionAd = nestedMaps[mapElement].getdata<struct json_map*>(KEYREF); //set the current parent map to the current mapelement's parent
             case_num = INTERMIDIATE;
 
             break;
@@ -259,11 +305,11 @@ void datamanagement::parsefile(std::string filename) {
             }
             else if (valueIden && inParent)
             {
-                nestedMaps[mapPosition].data[key] = value;
+                mapPositionAd->data[key] = value;// nestedMaps[mapPosition].data[key] = value;
             }
             else if (valueDIden && inParent)
             {
-                nestedMaps[mapElement].data[key] = value;
+               // nestedMaps[mapElement].data[key] = value;
             }
             
             

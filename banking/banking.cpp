@@ -116,8 +116,10 @@ int main()
     datamanagement tester("C:/Users/wilyx11/Desktop/projects/C++/Banking_management_system/banking//banking/Data/accounts.json");
     
    tester.parsefile();
+   tester.getStringFile();
    //User testuser(&tester, "0");
-
+   auto testd = tester.getValue("0", "accountinfo", "transactions");
+   auto testf = tester.writeData();
    
 
    

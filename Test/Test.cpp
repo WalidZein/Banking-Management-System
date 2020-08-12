@@ -113,7 +113,7 @@ namespace BankingTest
 
 			datamanagement testob("C:/Users/wilyx11/Desktop/projects/C++/Banking_management_system/banking//banking/Data/accounts.json");
 			testob.parsefile();
-			User test(&testob, "0");
+			//User test(&testob, "0");
 
 		}
 
